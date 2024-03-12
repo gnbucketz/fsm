@@ -1,0 +1,31 @@
+`timescale 1ns/10ps  // Define the timescale for simulation
+
+module finitestate_tb;  // Module declaration for the testbench
+
+localparam CLK_PERIOD = 10;  // Parameter defining clock period
+
+reg clk = 1'b0;  // Clock signal, initialized to 0
+reg rst = 1'b1;  // Reset signal, initialized to 1
+wire Idle, VCC1_on, VCC2_on, VCC3_on;  // Output signals from the module under test
+
+// Instantiate the finitestate module
+finitestate finitestate_inst (
+    .clk(clk),          // Clock input to the module
+    .rst(rst),          // Reset input to the module
+    .Idle(Idle),        // Idle signal output from the module
+    .VCC1_on(VCC1_on), // VCC1_on signal output from the module
+    .VCC2_on(VCC2_on), // VCC2_on signal output from the module
+    .VCC3_on(VCC3_on)  // VCC3_on signal output from the module
+);
+
+initial begin
+    clk = 1'b0;                          // Initialize clock to 0
+    rst = 1'b1;                          // Initialize reset to 1
+    #((CLK_PERIOD*10)) rst = 1'b0;  // Release reset after 10 clock cycles
+end
+
+always begin
+    #((CLK_PERIOD/2)) clk = ~clk;  // Toggle the clock every half of CLK_PERIOD
+end
+
+endmodule
